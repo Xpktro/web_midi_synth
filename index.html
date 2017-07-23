@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="logs">
+      <h4>Logs:</h4>
+      <pre class="logs-text"></pre>
+    </div>
+
+    <h3>Primitive Synth</h3>
+    MIDI Device: <select id="devices"></select> <br>
+    <button type="button" id="start" onclick="startSynth()">Start</button>
+    <button type="button" id="stop" onclick="stopSynth()" disabled="true">Stop</button>
+
+    <h4>Oscillator (CC 10)</h4>
+    <select id="oscillator">
+      <option value="sine">Sine</option>
+      <option value="square">Square</option>
+      <option value="sawtooth">Sawtooth</option>
+      <option value="triangle">Triangle</option>
+    </select>
+
+    <ul>
+      <li>
+        <h4>Envelope</h4>
+        Attack (CC 74): <br>
+        <input id="attack" type="range" min="0" max="127" value="0" onchange="synth.setAttack(this.value)"> <br>
+        Release (CC 71): <br>
+        <input id="release" type="range" min="0" max="127" value="0" onchange="synth.setRelease(this.value)">
+      </li>
+      <li>
+        <h4>Filter</h4>
+        Frequency (CC 73): <br>
+        <input id="filterFrequency" type="range" min="0" max="127" value="127" onchange="synth.setFilterFrequency(this.value)"> <br>
+        Q (CC 75): <br>
+        <input id="filterQ" type="range" min="0" max="127" value="0" onchange="synth.setFilterQ(this.value)">
+      </li>
+      <li>
+        <h4>Delay</h4>
+        Amount (CC 72): <br>
+        <input id="delayAmount" type="range" min="0" max="127" value="0" onchange="synth.setDelayAmount(this.value)"> <br>
+        Rate (CC 91): <br>
+        <input id="delayRate" type="range" min="0" max="127" value="0" onchange="synth.setDelayRate(this.value)"> <br>
+        Feedback (CC 93): <br>
+        <input id="delayFeedback" type="range" min="0" max="127" value="0" onchange="synth.setDelayFeedback(this.value)">
+      </li>
+    </ul>
+
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/midi.js"></script>
+    <script type="text/javascript" src="js/synth.js"></script>
+    <script type="text/javascript">
+      function startSynth() {
+        synth.start();
+        midi.useSynth(synth);
+
+        document.getElementById('start').disabled = true;
+        document.getElementById('stop').disabled = false;
+      }
+
+      function stopSynth() {
+        synth.stop();
+        document.getElementById('start').disabled = false;
+        document.getElementById('stop').disabled = true;
+      }
+
+      window.onload = () => {
+        synth = new Synth();
+        midi  = new MIDIHandler();
+      }
+    </script>
+  </body>
+</html>
